@@ -18,7 +18,14 @@ class CallbackWidget extends \yupe\widgets\YWidget
     public function init()
     {
         $cs = Yii::app()->getClientScript();
-        $cs->registerCoreScript('maskedinput');
+        $cs->registerCoreScript('inputmask');
+
+//        $cs->registerScriptFile(Yii::app()->getAssetManager()->publish(
+//            Yii::getPathOfAlias('application.modules.callback.views.web') . '/jquery.inputmask.js'
+//        ), CClientScript::POS_END);
+
+
+//        Yii::app()->getClientScript()->registerScriptFile('https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/inputmask/jquery.inputmask.js');
 
         $cs->registerScriptFile(Yii::app()->getAssetManager()->publish(
             Yii::getPathOfAlias('application.modules.callback.views.web') . '/maskedInputInit.js'

@@ -4,7 +4,6 @@
 <head>
     <?php
     \yupe\components\TemplateEvent::fire(ShopThemeEvents::HEAD_START);
-
     Yii::app()->getClientScript()->registerCssFile($this->mainAssets . '/styles/slick.css');
     Yii::app()->getClientScript()->registerCssFile($this->mainAssets . '/libs/select2/select2.css');
     Yii::app()->getClientScript()->registerCssFile($this->mainAssets . '/styles/common.css');
@@ -13,15 +12,15 @@
     Yii::app()->getClientScript()->registerCoreScript('jquery');
     ?>
 
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title><?= $this->title;?></title>
-    <meta name="description" content="<?= $this->description;?>" />
-    <meta name="keywords" content="<?= $this->keywords;?>" />
+    <title><?= $this->title; ?></title>
+    <meta name="description" content="<?= $this->description; ?>"/>
+    <meta name="keywords" content="<?= $this->keywords; ?>"/>
     <?php if ($this->canonical): ?>
-        <link rel="canonical" href="<?= $this->canonical ?>" />
+        <link rel="canonical" href="<?= $this->canonical ?>"/>
     <?php endif; ?>
 
     <script type="text/javascript">
@@ -31,11 +30,17 @@
         var yupeCartUpdateUrl = '<?= Yii::app()->createUrl('/cart/cart/update/')?>';
         var yupeCartWidgetUrl = '<?= Yii::app()->createUrl('/cart/cart/widget/')?>';
     </script>
-    <?php \yupe\components\TemplateEvent::fire(ShopThemeEvents::HEAD_END);?>
+    <?php \yupe\components\TemplateEvent::fire(ShopThemeEvents::HEAD_END); ?>
 </head>
 
 <body>
-<?php \yupe\components\TemplateEvent::fire(ShopThemeEvents::BODY_START);?>
+<?php \yupe\components\TemplateEvent::fire(ShopThemeEvents::BODY_START);
+
+echo Yii::getPathOfAlias('vendor.robinherbots');
+
+?>
+
+
 <div class="main">
     <div class="main__navbar">
         <div class="navbar">
@@ -47,12 +52,18 @@
                 </div>
                 <div class="navbar__personal">
                     <div class="navbar__toolbar">
-                        <?php if(Yii::app()->hasModule('favorite')):?>
-                            <a href="<?= Yii::app()->createUrl('/favorite/favorite/index');?>" class="toolbar-button"><span class="toolbar-button__label"><i class="fa fa-heart-o fa-lg fa-fw"></i> Избранное</span><span class="badge badge_light-blue" id="yupe-store-favorite-total"><?= Yii::app()->favorite->count();?></span></a>
-                        <?php endif;?>
-                        <?php if(Yii::app()->hasModule('compare')):?>
-                            <a href="javascript:void(0);" class="toolbar-button"><span class="toolbar-button__label"><i class="fa fa-balance-scale fa-lg fa-fw"></i> Сравнение</span><span class="badge badge_light-blue">0</span></a>
-                        <?php endif;?>
+                        <?php if (Yii::app()->hasModule('favorite')): ?>
+                            <a href="<?= Yii::app()->createUrl('/favorite/favorite/index'); ?>"
+                               class="toolbar-button"><span class="toolbar-button__label"><i
+                                            class="fa fa-heart-o fa-lg fa-fw"></i> Избранное</span><span
+                                        class="badge badge_light-blue"
+                                        id="yupe-store-favorite-total"><?= Yii::app()->favorite->count(); ?></span></a>
+                        <?php endif; ?>
+                        <?php if (Yii::app()->hasModule('compare')): ?>
+                            <a href="javascript:void(0);" class="toolbar-button"><span class="toolbar-button__label"><i
+                                            class="fa fa-balance-scale fa-lg fa-fw"></i> Сравнение</span><span
+                                        class="badge badge_light-blue">0</span></a>
+                        <?php endif; ?>
                     </div>
                     <div class="navbar__user">
                         <?php if (Yii::app()->getUser()->getIsGuest()): ?>
@@ -66,29 +77,29 @@
                                 </span>
                                 <span class="badge badge_light-blue"></span>
 
-                               <div class="dropdown-menu">
-                                   <div class="dropdown-menu__header"><?= Yii::app()->getUser()->getProfile()->getFullName() ?></div>
-                                   <div class="dropdown-menu__item">
-                                       <div class="dropdown-menu__link">
-                                           <a href="<?= Yii::app()->createUrl('/order/user/index') ?>">Мои заказы</a>
-                                       </div>
-                                   </div>
-                                   <div class="dropdown-menu__item">
-                                       <div class="dropdown-menu__link">
-                                           <a href="<?= Yii::app()->createUrl('/user/profile/profile') ?>">
-                                               <?= Yii::t('UserModule.user', 'My profile') ?>
-                                           </a>
-                                       </div>
-                                   </div>
-                                   <div class="dropdown-menu__separator"></div>
-                                   <div class="dropdown-menu__item">
-                                       <div class="dropdown-menu__link dropdown-menu__link_exit">
-                                           <a href="<?= Yii::app()->createUrl('/user/account/logout') ?>">
-                                               <?= Yii::t('UserModule.user', 'Logout'); ?>
-                                           </a>
-                                       </div>
-                                   </div>
-                               </div>
+                                <div class="dropdown-menu">
+                                    <div class="dropdown-menu__header"><?= Yii::app()->getUser()->getProfile()->getFullName() ?></div>
+                                    <div class="dropdown-menu__item">
+                                        <div class="dropdown-menu__link">
+                                            <a href="<?= Yii::app()->createUrl('/order/user/index') ?>">Мои заказы</a>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-menu__item">
+                                        <div class="dropdown-menu__link">
+                                            <a href="<?= Yii::app()->createUrl('/user/profile/profile') ?>">
+                                                <?= Yii::t('UserModule.user', 'My profile') ?>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-menu__separator"></div>
+                                    <div class="dropdown-menu__item">
+                                        <div class="dropdown-menu__link dropdown-menu__link_exit">
+                                            <a href="<?= Yii::app()->createUrl('/user/account/logout') ?>">
+                                                <?= Yii::t('UserModule.user', 'Logout'); ?>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -99,13 +110,14 @@
     <div class="main__header">
         <div class="header grid">
             <div class="header__item header-logo">
-                <a href="<?= Yii::app()->createUrl(Yii::app()->hasModule('homepage') ? '/homepage/hp/index' : '/site/index') ?>" class="header__logo-link">
+                <a href="<?= Yii::app()->createUrl(Yii::app()->hasModule('homepage') ? '/homepage/hp/index' : '/site/index') ?>"
+                   class="header__logo-link">
                     <img src="<?= $this->mainAssets ?>/images/logo.png" class="header-logo-image">
                 </a>
             </div>
-            <div class="header__item header-description"><?= CHtml::encode(Yii::app()->getModule('yupe')->siteName);?></div>
+            <div class="header__item header-description"><?= CHtml::encode(Yii::app()->getModule('yupe')->siteName); ?></div>
             <div class="header__item header-phone">
-                <div class="header__phone"><?= CHtml::encode(Yii::app()->getModule('store')->phone);?></div>
+                <div class="header__phone"><?= CHtml::encode(Yii::app()->getModule('store')->phone); ?></div>
                 <?php if (Yii::app()->hasModule('callback')): ?>
                     <?php $this->widget('application.modules.callback.widgets.CallbackWidget'); ?>
                 <?php endif; ?>
@@ -119,13 +131,14 @@
     </div>
     <div class="main__search grid">
         <div class="search-bar">
-            <div class="search-bar__wrapper"><a href="javascript:void(0);" data-toggle="#menu-catalog" class="search-bar__catalog-button">Каталог товаров</a>
+            <div class="search-bar__wrapper"><a href="javascript:void(0);" data-toggle="#menu-catalog"
+                                                class="search-bar__catalog-button">Каталог товаров</a>
                 <?php $this->widget('application.modules.store.widgets.SearchProductWidget'); ?>
             </div>
-            <?php if($this->beginCache('store::category::menu', ['duration' => $this->yupe->coreCacheTime])):?>
+            <?php if ($this->beginCache('store::category::menu', ['duration' => $this->yupe->coreCacheTime])): ?>
                 <?php $this->widget('application.modules.store.widgets.CategoryWidget', ['depth' => 2]); ?>
-                <?php $this->endCache();?>
-            <?php endif;?>
+                <?php $this->endCache(); ?>
+            <?php endif; ?>
         </div>
     </div>
     <div class="main__breadcrumbs grid">
@@ -142,7 +155,7 @@
                     'htmlOptions' => [],
                     'encodeLabel' => false
                 ]
-            );?>
+            ); ?>
         </div>
     </div>
     <?= $content ?>
@@ -163,19 +176,22 @@
                         <?php endif; ?>
                     </div>
                     <div class="footer__group">
-                        <?php if($this->beginCache('store::category::footer', ['duration' => $this->yupe->coreCacheTime])):?>
-                        <?php $this->widget('application.modules.store.widgets.CategoryWidget', [
-                            'depth' => 0,
-                            'view' => 'footer'
-                        ]); ?>
+                        <?php if ($this->beginCache('store::category::footer', ['duration' => $this->yupe->coreCacheTime])): ?>
+                            <?php $this->widget('application.modules.store.widgets.CategoryWidget', [
+                                'depth' => 0,
+                                'view' => 'footer'
+                            ]); ?>
 
-                            <?php $this->endCache();?>
-                        <?php endif;?>
+                            <?php $this->endCache(); ?>
+                        <?php endif; ?>
                     </div>
                     <div class="footer__group">
                         <div class="footer__item footer__item_header">Контакты</div>
-                        <div class="footer__item"><i class="fa fa-phone fa-fw"></i> <?= CHtml::encode(Yii::app()->getModule('store')->phone);?></div>
-                        <div class="footer__item"><i class="fa fa-envelope fa-fw"></i> E-mail: <?= CHtml::encode(Yii::app()->getModule('store')->email);?></div>
+                        <div class="footer__item"><i
+                                    class="fa fa-phone fa-fw"></i> <?= CHtml::encode(Yii::app()->getModule('store')->phone); ?>
+                        </div>
+                        <div class="footer__item"><i class="fa fa-envelope fa-fw"></i>
+                            E-mail: <?= CHtml::encode(Yii::app()->getModule('store')->email); ?></div>
                     </div>
                     <div class="footer__group">
                         <div class="footer__item footer__item_header">Работаем</div>
@@ -188,7 +204,7 @@
         </div>
     </div>
 </div>
-<?php \yupe\components\TemplateEvent::fire(ShopThemeEvents::BODY_END);?>
+<?php \yupe\components\TemplateEvent::fire(ShopThemeEvents::BODY_END); ?>
 <div class='notifications top-right' id="notifications"></div>
 <?php
 Yii::app()->getClientScript()->registerScriptFile($this->mainAssets . '/js/index.js', CClientScript::POS_END);

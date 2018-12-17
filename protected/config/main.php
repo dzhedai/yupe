@@ -69,6 +69,16 @@ return [
      * @link http://www.yiiframework.ru/doc/guide/ru/basics.component
      */
     'components' => [
+        'clientScript' => [
+            'packages' => [
+                'inputmask' => [
+                    'class' => 'vendor.robinherbots.jquery.inputmask',
+                    'baseUrl' => '123',
+                    'js' => [Yii::getPathOfAlias('bundle.jquery.js')],
+                    'coreScriptPosition' => CClientScript::POS_END
+                ],
+            ],
+        ],
         'viewRenderer' => [
             'class' => 'vendor.yiiext.twig-renderer.ETwigViewRenderer',
             'twigPathAlias' => 'vendor.twig.twig.lib.Twig',
