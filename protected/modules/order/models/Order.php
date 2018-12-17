@@ -1,8 +1,6 @@
 <?php
 /**
  * @property integer $id
- * @property integer $delivery_id
- * @property double $delivery_price
  * @property integer $payment_method_id
  * @property integer $paid
  * @property string $payment_time
@@ -10,7 +8,6 @@
  * @property double $total_price
  * @property double $discount
  * @property double $coupon_discount
- * @property integer $separate_delivery
  * @property integer $status_id
  * @property string $date
  * @property integer $user_id
@@ -22,21 +19,16 @@
  * @property string $url
  * @property string $note
  * @property string $modified
- * @property string $zipcode
- * @property string $country
- * @property string $city
- * @property string $street
- * @property string $house
- * @property string $apartment
  * @property integer $manager_id
  *
  * @property OrderProduct[] $products
- * @property Delivery $delivery
+ * @property OrderDelivery[] $delivery
  * @property Payment $payment
  * @property User $user
  * @property OrderStatus $status
  *
  */
+
 use yupe\widgets\YPurifier;
 
 Yii::import('application.modules.order.OrderModule');
@@ -78,6 +70,9 @@ class Order extends yupe\models\YModel
      */
     private $_orderProducts = [];
 
+
+    private $_orderDelivery = null;
+
     /**
      * @var bool
      */
@@ -92,6 +87,10 @@ class Order extends yupe\models\YModel
      * @var bool
      */
     private $productsChanged = false; // менялся ли список продуктов в заказе
+
+
+    private $deliveryChange = false; // менялись ли условия доставки при заказе
+
 
     /**
      * @var null
@@ -121,31 +120,27 @@ class Order extends yupe\models\YModel
     public function rules()
     {
         return [
-            ['name, email, phone, zipcode, country, city, street, house, apartment', 'filter', 'filter' => 'trim'],
-            ['name, email, phone, zipcode, country, city, street, house, apartment, comment', 'filter', 'filter' => [$obj = new YPurifier(), 'purify']],
-            ['status_id, delivery_id', 'required'],
+            ['name, email, phone', 'filter', 'filter' => 'trim'],
+            ['name, email, phone, comment', 'filter', 'filter' => [$obj = new YPurifier(), 'purify']],
+            ['status_id', 'required'],
             ['name, email', 'required', 'on' => self::SCENARIO_USER],
             ['email', 'email'],
             [
-                'delivery_id, separate_delivery, payment_method_id, paid, user_id, couponId, manager_id',
+                'payment_method_id, paid, user_id, couponId, manager_id',
                 'numerical',
                 'integerOnly' => true,
             ],
-            ['delivery_price, total_price, discount, coupon_discount', 'store\components\validators\NumberValidator'],
-            ['name, phone, email, city, street', 'length', 'max' => 255],
+            ['total_price, discount, coupon_discount', 'store\components\validators\NumberValidator'],
+            ['name, phone, email', 'length', 'max' => 255],
             ['comment, note', 'length', 'max' => 1024],
-            ['zipcode', 'length', 'max' => 30],
-            ['house', 'length', 'max' => 50],
-            ['country', 'length', 'max' => 150],
-            ['apartment', 'length', 'max' => 10],
             ['url', 'unique'],
             [
-                'user_id, paid, payment_time, payment_details, total_price, discount, coupon_discount, separate_delivery, status_id, date, ip, url, modified',
+                'user_id, paid, payment_time, payment_details, total_price, discount, coupon_discount, status_id, date, ip, url, modified',
                 'unsafe',
                 'on' => self::SCENARIO_USER,
             ],
             [
-                'id, delivery_id, delivery_price, payment_method_id, paid, payment_time, payment_details, total_price, discount, coupon_discount, separate_delivery, status_id, date, user_id, name, phone, email, comment, ip, url, note, modified, manager_id',
+                'id, payment_method_id, paid, payment_time, payment_details, total_price, discount, coupon_discount, status_id, date, user_id, name, phone, email, comment, ip, url, note, modified, manager_id',
                 'safe',
                 'on' => 'search',
             ],
@@ -159,7 +154,6 @@ class Order extends yupe\models\YModel
     {
         return [
             'products' => [self::HAS_MANY, 'OrderProduct', 'order_id', 'order' => 'products.id ASC'],
-            'delivery' => [self::BELONGS_TO, 'Delivery', 'delivery_id'],
             'payment' => [self::BELONGS_TO, 'Payment', 'payment_method_id'],
             'status' => [self::BELONGS_TO, 'OrderStatus', 'status_id'],
             'client' => [self::BELONGS_TO, 'Client', 'user_id'],
@@ -223,17 +217,6 @@ class Order extends yupe\models\YModel
             'note' => Yii::t('OrderModule.order', 'Note'),
             'modified' => Yii::t('OrderModule.order', 'Update date'),
             'manager_id' => Yii::t('OrderModule.order', 'Manager'),
-
-            'delivery_id' => Yii::t('OrderModule.order', 'Delivery method'),
-            'delivery_price' => Yii::t('OrderModule.order', 'Delivery price'),
-            'separate_delivery' => Yii::t('OrderModule.order', 'Separate delivery payment'),
-            'zipcode' => Yii::t('OrderModule.order', 'Zipcode'),
-            'country' => Yii::t('OrderModule.order', 'Country'),
-            'city' => Yii::t('OrderModule.order', 'City'),
-            'street' => Yii::t('OrderModule.order', 'Street'),
-            'house' => Yii::t('OrderModule.order', 'House'),
-            'apartment' => Yii::t('OrderModule.order', 'Apartment'),
-
         ];
     }
 
@@ -243,12 +226,10 @@ class Order extends yupe\models\YModel
     public function search()
     {
         $criteria = new CDbCriteria;
-        $criteria->with = ['delivery', 'payment', 'client', 'status'];
+        $criteria->with = ['payment', 'client', 'status'];
 
         $criteria->compare('t.id', $this->id);
         $criteria->compare('t.name', $this->name, true);
-        $criteria->compare('delivery_id', $this->delivery_id);
-        $criteria->compare('delivery_price', $this->delivery_price);
         $criteria->compare('payment_method_id', $this->payment_method_id);
         $criteria->compare('paid', $this->paid);
         $criteria->compare('payment_time', $this->payment_time);
@@ -289,7 +270,7 @@ class Order extends yupe\models\YModel
         return new CActiveDataProvider(
             __CLASS__, [
                 'criteria' => $criteria,
-                'sort' => ['defaultOrder' => $this->getTableAlias().'.id DESC'],
+                'sort' => ['defaultOrder' => $this->getTableAlias() . '.id DESC'],
             ]
         );
     }
@@ -469,8 +450,9 @@ class Order extends yupe\models\YModel
      *
      * @return bool
      */
-    public function store(array $attributes, array $products, $client = null, $status = OrderStatus::STATUS_NEW)
+    public function store(array $attributes, array $products, array $delivery, $client = null, $status = OrderStatus::STATUS_NEW)
     {
+
         $isNew = $this->getIsNewRecord();
         $transaction = Yii::app()->getDb()->beginTransaction();
 
@@ -479,7 +461,9 @@ class Order extends yupe\models\YModel
             $this->status_id = (int)$status;
             $this->user_id = $client;
             $this->setAttributes($attributes);
+
             $this->setProducts($products);
+            $this->setDelivery($delivery);
 
             if (!$this->save()) {
                 return false;
@@ -603,6 +587,55 @@ class Order extends yupe\models\YModel
         return isset($data[$this->paid]) ? $data[$this->paid] : Yii::t("OrderModule.order", '*unknown*');
     }
 
+
+    public function setDelivery($orderDeliveryArr)
+    {
+
+        $this->deliveryChange = true;
+
+
+        if (is_array($orderDeliveryArr)) {
+
+
+            $delivery = null;
+
+            if (isset($orderDeliveryArr['id'])) {
+                $delivery = Delivery::model()->findByPk($orderDeliveryArr['id']);
+
+            }
+
+
+//            if (!$delivery) {
+                $orderDelivery = new OrderDelivery();
+                $orderDelivery->order_id = rand(1,1000);
+                $orderDelivery->delivery_id = $delivery->id;
+                $orderDelivery->delivery_name = $delivery->name;
+                $orderDelivery->delivery_price = $delivery->delivery_price;
+                $orderDelivery->separate_delivery = $delivery->separate_delivery;
+                $orderDelivery->zipcode = $orderDeliveryArr['zipcode'];
+                $orderDelivery->country = $orderDeliveryArr['country'];
+                $orderDelivery->city = $orderDeliveryArr['city'];
+                $orderDelivery->street = $orderDeliveryArr['street'];
+                $orderDelivery->house = $orderDeliveryArr['house'];
+                $orderDelivery->apartment = $orderDeliveryArr['apartment'];
+                $orderDelivery->paid = 1;
+
+//            }
+
+            if ($orderDelivery->save()) {
+                echo $orderDelivery->id;
+
+                die();
+
+
+            }
+
+
+        }
+
+    }
+
+
     /**
      *
      * Формат массива:
@@ -630,6 +663,7 @@ class Order extends yupe\models\YModel
                     $product = Product::model()->findByPk($op['product_id']);
                 }
                 $variantIds = isset($op['variant_ids']) ? $op['variant_ids'] : [];
+
                 if ($product) {
                     $this->hasProducts = true;
                 }
@@ -692,12 +726,33 @@ class Order extends yupe\models\YModel
         OrderProduct::model()->deleteAll($criteria);
     }
 
+
+    private function updateOrderDelivery($delivery)
+    {
+
+        echo "!";
+//        if (!$this->deliveryChange) {
+//            return null;
+//        }
+
+        if ($delivery->save()) {
+
+            echo "!!";
+            return $delivery->id;
+        }
+
+
+    }
+
+
     /**
      *
      */
     public function afterSave()
     {
         $this->updateOrderProducts($this->_orderProducts);
+        $this->updateOrderDelivery($this->_orderDelivery);
+
         parent::afterSave();
     }
 

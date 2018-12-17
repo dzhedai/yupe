@@ -33,13 +33,16 @@ class OrderController extends \yupe\components\controllers\FrontController
 
         if (Yii::app()->getRequest()->getIsPostRequest() && Yii::app()->getRequest()->getPost('Order')) {
 
+
             $order = Yii::app()->getRequest()->getPost('Order');
 
             $products = Yii::app()->getRequest()->getPost('OrderProduct');
 
+            $delivery = Yii::app()->getRequest()->getPost('OrderDelivery');
+
             $coupons = isset($order['couponCodes']) ? $order['couponCodes'] : [];
 
-            if ($model->store($order, $products, Yii::app()->getUser()->getId(), (int)Yii::app()->getModule('order')->defaultStatus)) {
+            if ($model->store($order, $products, $delivery, Yii::app()->getUser()->getId(), (int)Yii::app()->getModule('order')->defaultStatus)) {
 
                 Yii::app()->cart->clear();
 

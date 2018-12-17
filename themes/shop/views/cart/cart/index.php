@@ -65,11 +65,12 @@ $this->breadcrumbs = [
                     $product = $position->getProductModel();
 
                     if (is_null($product)) continue;
+
                     ?>
                     <div class="cart-list__item">
                         <?php $positionId = $position->getId(); ?>
                         <?php $productUrl = ProductHelper::getUrl($product); ?>
-                        <?= CHtml::hiddenField('OrderProduct['.$positionId.'][product_id]', $position->id); ?>
+                        <?= CHtml::textField('OrderProduct['.$positionId.'][product_id]', $position->id); ?>
                         <input type="hidden" class="position-id" value="<?= $positionId; ?>"/>
 
                         <div class="cart-item js-cart__item">
@@ -89,7 +90,7 @@ $this->breadcrumbs = [
                                     </div>
                                     <?php foreach ($position->selectedVariants as $variant): ?>
                                         <h6><?= $variant->attribute->title; ?>: <?= $variant->getOptionValue(); ?></h6>
-                                        <?= CHtml::hiddenField('OrderProduct[' . $positionId . '][variant_ids][]', $variant->id); ?>
+                                        <?= CHtml::textField('OrderProduct[' . $positionId . '][variant_ids][]', $variant->id); ?>
                                     <?php endforeach; ?>
                                 </div>
                             </div>
@@ -141,7 +142,7 @@ $this->breadcrumbs = [
                                         <?= $coupon->name; ?>
                                         <button type="button" class="btn btn_primary close"
                                                 data-dismiss="alert">&times;</button>
-                                        <?= CHtml::hiddenField(
+                                        <?= CHtml::textField(
                                             "Order[couponCodes][{$coupon->code}]",
                                             $coupon->code,
                                             [
@@ -172,15 +173,16 @@ $this->breadcrumbs = [
                             <div class="order-box-delivery__type">
                                 <?php foreach ($deliveryTypes as $key => $delivery): ?>
                                     <div class="rich-radio">
-                                        <input type="radio" name="Order[delivery_id]"
+
+                                        <input type="radio" name="OrderDelivery[delivery_id]"
                                                id="delivery-<?= $delivery->id; ?>"
                                                class="rich-radio__input"
-                                               hidden="hidden"
                                                value="<?= $delivery->id; ?>"
                                                data-price="<?= $delivery->price; ?>"
                                                data-free-from="<?= $delivery->free_from; ?>"
                                                data-available-from="<?= $delivery->available_from; ?>"
                                                data-separate-payment="<?= $delivery->separate_payment; ?>">
+
                                         <label for="delivery-<?= $delivery->id; ?>" class="rich-radio__label">
                                             <div class="rich-radio-body">
                                                 <div class="rich-radio-body__content">
@@ -257,7 +259,7 @@ $this->breadcrumbs = [
                                             <div class="form-group">
                                                 <?= $form->labelEx($order, 'zipcode', ['class' => 'form-group__label']); ?>
                                                 <div class="form-group__input">
-                                                    <?= $form->textField($order, 'zipcode', ['class' => 'input']); ?>
+                                                    <?= CHtml::textField('OrderDelivery[zipcode]'); ?>
                                                 </div>
                                                 <div class="form-group__help">
                                                     <?= $form->error($order, 'zipcode'); ?>
@@ -270,7 +272,7 @@ $this->breadcrumbs = [
                                             <div class="form-group">
                                                 <?= $form->labelEx($order, 'country', ['class' => 'form-group__label']); ?>
                                                 <div class="form-group__input">
-                                                    <?= $form->textField($order, 'country', ['class' => 'input']); ?>
+                                                    <?= CHtml::textField('OrderDelivery[country]'); ?>
                                                 </div>
                                                 <div class="form-group__help">
                                                     <?= $form->error($order, 'country'); ?>
@@ -283,7 +285,7 @@ $this->breadcrumbs = [
                                             <div class="form-group">
                                                 <?= $form->labelEx($order, 'city', ['class' => 'form-group__label']); ?>
                                                 <div class="form-group__input">
-                                                    <?= $form->textField($order, 'city', ['class' => 'input']); ?>
+                                                    <?= CHtml::textField('OrderDelivery[city]'); ?>
                                                 </div>
                                                 <div class="form-group__help">
                                                     <?= $form->error($order, 'city'); ?>
@@ -296,7 +298,7 @@ $this->breadcrumbs = [
                                             <div class="form-group">
                                                 <?= $form->labelEx($order, 'street', ['class' => 'form-group__label']); ?>
                                                 <div class="form-group__input">
-                                                    <?= $form->textField($order, 'street', ['class' => 'input']); ?>
+                                                    <?= CHtml::textField('OrderDelivery[street]'); ?>
                                                 </div>
                                                 <div class="form-group__help">
                                                     <?= $form->error($order, 'street'); ?>
@@ -309,7 +311,7 @@ $this->breadcrumbs = [
                                             <div class="form-group">
                                                 <?= $form->labelEx($order, 'house', ['class' => 'form-group__label']); ?>
                                                 <div class="form-group__input">
-                                                    <?= $form->textField($order, 'house', ['class' => 'input']); ?>
+                                                    <?= CHtml::textField('OrderDelivery[house]'); ?>
                                                 </div>
                                                 <div class="form-group__help">
                                                     <?= $form->error($order, 'house'); ?>
@@ -322,7 +324,7 @@ $this->breadcrumbs = [
                                             <div class="form-group">
                                                 <?= $form->labelEx($order, 'apartment', ['class' => 'form-group__label']); ?>
                                                 <div class="form-group__input">
-                                                    <?= $form->textField($order, 'apartment', ['class' => 'input']); ?>
+                                                    <?= CHtml::textField('OrderDelivery[apartment]'); ?>
                                                 </div>
                                                 <div class="form-group__help">
                                                     <?= $form->error($order, 'apartment'); ?>

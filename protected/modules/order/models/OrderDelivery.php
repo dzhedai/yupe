@@ -68,10 +68,9 @@ class OrderDelivery extends \yupe\models\YModel
         return [
             ['order_id', 'required'],
             ['zipcode, country, city, street, house, apartment', 'filter', 'filter' => 'trim'],
-            ['zipcode, country, city, street, house, apartment ', 'filter', 'filter' => [$obj = new YPurifier(), 'purify']],
+            ['zipcode, country, city, street, house, apartment ', 'filter', 'filter' => [new YPurifier(), 'purify']],
             [
-                'order_id, delivery_id, separate_delivery',
-                'numerical, paid',
+                'order_id, delivery_id, separate_delivery, numerical, paid',
                 'integerOnly' => true,
             ],
             ['delivery_price', 'store\components\validators\NumberValidator'],

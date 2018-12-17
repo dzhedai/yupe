@@ -38,6 +38,8 @@ return [
     'layout' => 'yupe',
     'charset' => 'UTF-8',
     'controllerNamespace' => 'application\controllers',
+    'preload' => defined('YII_DEBUG') && YII_DEBUG ? ['debug'] : [],
+
     'aliases' => [
         'bootstrap' => realpath(Yii::getPathOfAlias('vendor') . '/clevertech/yii-booster/src')
     ],
@@ -77,6 +79,8 @@ return [
             'globals' => ['html' => 'CHtml'],
             'filters' => ['jencode' => 'CJSON::encode']
         ],
+        'debug' => ['class' => 'vendor.zhuravljov.yii2-debug.Yii2Debug', 'internalUrls' => false, 'allowedIPs' => array('5.59.32.41', '::1', '127.0.0.1')],
+
         /**
          * Database settings be used only after Yupe install         *
          * @link http://www.yiiframework.ru/doc/guide/ru/database.overview
@@ -128,6 +132,7 @@ return [
                 '/backend/<module:\w+>/<controller:\w+>' => '/<module>/<controller>Backend/index',
                 '/backend/<module:\w+>/<controller:\w+>/<action:\w+>/<id:\d+>' => '/<module>/<controller>Backend/<action>',
                 '/backend/<module:\w+>/<controller:\w+>/<action:\w+>' => '/<module>/<controller>Backend/<action>',
+                '/debug/<controller:\w+>/<action:\w+>' => 'debug/<controller>/<action>',
             ]
         ],
         /**
