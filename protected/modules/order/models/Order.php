@@ -204,8 +204,6 @@ class Order extends yupe\models\YModel
     {
         return [
             'id' => Yii::t('OrderModule.order', '#'),
-            'delivery_id' => Yii::t('OrderModule.order', 'Delivery method'),
-            'delivery_price' => Yii::t('OrderModule.order', 'Delivery price'),
             'payment_method_id' => Yii::t('OrderModule.order', 'Payment method'),
             'paid' => Yii::t('OrderModule.order', 'Paid'),
             'payment_time' => Yii::t('OrderModule.order', 'Paid date'),
@@ -213,7 +211,6 @@ class Order extends yupe\models\YModel
             'total_price' => Yii::t('OrderModule.order', 'Total price'),
             'discount' => Yii::t('OrderModule.order', 'Discount (%)'),
             'coupon_discount' => Yii::t('OrderModule.order', 'Discount coupon'),
-            'separate_delivery' => Yii::t('OrderModule.order', 'Separate delivery payment'),
             'status_id' => Yii::t('OrderModule.order', 'Status'),
             'date' => Yii::t('OrderModule.order', 'Created'),
             'user_id' => Yii::t('OrderModule.order', 'Client'),
@@ -225,13 +222,18 @@ class Order extends yupe\models\YModel
             'url' => Yii::t('OrderModule.order', 'Url'),
             'note' => Yii::t('OrderModule.order', 'Note'),
             'modified' => Yii::t('OrderModule.order', 'Update date'),
+            'manager_id' => Yii::t('OrderModule.order', 'Manager'),
+
+            'delivery_id' => Yii::t('OrderModule.order', 'Delivery method'),
+            'delivery_price' => Yii::t('OrderModule.order', 'Delivery price'),
+            'separate_delivery' => Yii::t('OrderModule.order', 'Separate delivery payment'),
             'zipcode' => Yii::t('OrderModule.order', 'Zipcode'),
             'country' => Yii::t('OrderModule.order', 'Country'),
             'city' => Yii::t('OrderModule.order', 'City'),
             'street' => Yii::t('OrderModule.order', 'Street'),
             'house' => Yii::t('OrderModule.order', 'House'),
             'apartment' => Yii::t('OrderModule.order', 'Apartment'),
-            'manager_id' => Yii::t('OrderModule.order', 'Manager'),
+
         ];
     }
 
