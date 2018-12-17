@@ -144,4 +144,10 @@ return [
     'yes' => 'да',
     'yupe team' => 'yupe team',
     'General' => 'Основное',
+    'Module name' => 'Модуль',
+    'Page type' => 'Тип страницы',
+    'Page' => 'Страница',
+    '-- Not set --' => '-- Не выбрано --',
+    'Select link' => 'Выбрать ссылку',
+    'Close' => 'Закрыть'
 ];
