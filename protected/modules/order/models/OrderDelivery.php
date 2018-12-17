@@ -18,8 +18,20 @@
  * @property Order $order
  * @property Delivery $delivety
  */
+
+use yupe\widgets\YPurifier;
+
 class OrderDelivery extends \yupe\models\YModel
 {
+
+    /**
+     *
+     */
+    const SCENARIO_USER = 'front';
+    /**
+     *
+     */
+    const SCENARIO_ADMIN = 'admin';
 
     /**
      *
@@ -29,7 +41,6 @@ class OrderDelivery extends \yupe\models\YModel
      *
      */
     const PAID_STATUS_PAID = 1;
-
 
 
     /**
@@ -56,7 +67,30 @@ class OrderDelivery extends \yupe\models\YModel
     {
         return [
             ['order_id', 'required'],
+            ['zipcode, country, city, street, house, apartment', 'filter', 'filter' => 'trim'],
+            ['zipcode, country, city, street, house, apartment ', 'filter', 'filter' => [$obj = new YPurifier(), 'purify']],
+            [
+                'order_id, delivery_id, separate_delivery',
+                'numerical, paid',
+                'integerOnly' => true,
+            ],
+            ['delivery_price', 'store\components\validators\NumberValidator'],
+            [
+                'paid, separate_delivery',
+                'unsafe',
+                'on' => self::SCENARIO_USER,
+            ],
+
             ['delivery_name', 'length', 'max' => 511],
+            ['zipcode', 'length', 'max' => 30],
+            ['house', 'length', 'max' => 50],
+            ['country', 'length', 'max' => 150],
+            ['apartment', 'length', 'max' => 10],
+            [
+                'id, delivery_id, delivery_price, paid, separate_delivery ',
+                'safe',
+                'on' => 'search',
+            ]
 
         ];
     }
@@ -79,6 +113,7 @@ class OrderDelivery extends \yupe\models\YModel
     public function attributeLabels()
     {
         return [
+
             'delivery_id' => Yii::t('OrderModule.order', 'Delivery method'),
             'delivery_price' => Yii::t('OrderModule.order', 'Delivery price'),
             'separate_delivery' => Yii::t('OrderModule.order', 'Separate delivery payment'),
